@@ -24,17 +24,17 @@ public class CallController {
 
     Logger logger = LoggerFactory.getLogger(CallController.class);
 
-    private String username = System.getenv("BANDWIDTH_USERNAME");
-    private String password = System.getenv("BANDWIDTH_PASSWORD");
-    private String accountId = System.getenv("BANDWIDTH_ACCOUNT_ID");
-    private String applicationId = System.getenv("BANDWIDTH_VOICE_APPLICATION_ID");
+    private final String username = System.getenv("BANDWIDTH_USERNAME");
+    private final String password = System.getenv("BANDWIDTH_PASSWORD");
+    private final String accountId = System.getenv("BANDWIDTH_ACCOUNT_ID");
+    private final String applicationId = System.getenv("BANDWIDTH_VOICE_APPLICATION_ID");
 
-    private BandwidthClient client = new BandwidthClient.Builder()
+    private final BandwidthClient client = new BandwidthClient.Builder()
             .voiceBasicAuthCredentials(username, password)
             .environment(Environment.PRODUCTION)
             .build();
 
-    private APIController controller = client.getVoiceClient().getAPIController();
+    private final APIController controller = client.getVoiceClient().getAPIController();
 
     @PostMapping()
     public VoiceReply createCall(@RequestBody CreateCall createCall) throws IOException {
