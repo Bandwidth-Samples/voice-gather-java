@@ -22,8 +22,8 @@ public class CallbacksController {
 
     Logger logger = LoggerFactory.getLogger(CallbacksController.class);
 
-    private String username = System.getenv("BANDWIDTH_API_USERNAME");
-    private String password = System.getenv("BANDWIDTH_API_PASSWORD");
+    private String username = System.getenv("BANDWIDTH_USERNAME");
+    private String password = System.getenv("BANDWIDTH_PASSWORD");
     private String accountId = System.getenv("BANDWIDTH_ACCOUNT_ID");
     private String applicationId = System.getenv("BANDWIDTH_VOICE_APPLICATION_ID");
 
