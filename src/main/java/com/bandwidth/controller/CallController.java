@@ -24,10 +24,10 @@ public class CallController {
 
     Logger logger = LoggerFactory.getLogger(CallController.class);
 
-    private final String username = System.getenv("BANDWIDTH_USERNAME");
-    private final String password = System.getenv("BANDWIDTH_PASSWORD");
-    private final String accountId = System.getenv("BANDWIDTH_ACCOUNT_ID");
-    private final String applicationId = System.getenv("BANDWIDTH_VOICE_APPLICATION_ID");
+    private final String username = System.getenv("BW_USERNAME");
+    private final String password = System.getenv("BW_PASSWORD");
+    private final String accountId = System.getenv("BW_ACCOUNT_ID");
+    private final String applicationId = System.getenv("BW_VOICE_APPLICATION_ID");
 
     private final BandwidthClient client = new BandwidthClient.Builder()
             .voiceBasicAuthCredentials(username, password)
