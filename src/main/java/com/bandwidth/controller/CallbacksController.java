@@ -1,9 +1,7 @@
 package com.bandwidth.controller;
 
 import com.bandwidth.Model.VoiceCallback;
-import com.bandwidth.voice.bxml.verbs.Gather;
-import com.bandwidth.voice.bxml.verbs.Response;
-import com.bandwidth.voice.bxml.verbs.SpeakSentence;
+import com.bandwidth.voice.bxml.verbs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -7,8 +7,8 @@ import com.bandwidth.Model.VoiceReply;
 import com.bandwidth.exceptions.ApiException;
 import com.bandwidth.http.response.ApiResponse;
 import com.bandwidth.voice.controllers.APIController;
-import com.bandwidth.voice.models.ApiCallResponse;
-import com.bandwidth.voice.models.ApiCreateCallRequest;
+import com.bandwidth.voice.models.CreateCallResponse;
+import com.bandwidth.voice.models.CreateCallRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +40,7 @@ public class CallController {
     public VoiceReply createCall(@RequestBody CreateCall createCall) throws IOException {
 
         // Build the body of the call request to the Bandwidth API
-        ApiCreateCallRequest callRequest = new ApiCreateCallRequest.Builder()
+        CreateCallRequest callRequest = new CreateCallRequest.Builder()
                 .answerUrl("http://32e2578009f7.ngrok.io/callbacks/voiceCallback")
                 .applicationId(applicationId)
                 .to(createCall.getTo())
@@ -49,7 +49,7 @@ public class CallController {
 
         VoiceReply voiceReply = new VoiceReply();
         try {
-            ApiResponse<ApiCallResponse> response = controller.createCall(accountId, callRequest);
+            ApiResponse<CreateCallResponse> response = controller.createCall(accountId, callRequest);
             voiceReply.setSuccess(true);
         } catch (ApiException e) { // Bandwidth API response status not 2XX
             voiceReply.setSuccess(false);
