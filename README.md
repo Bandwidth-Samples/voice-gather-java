@@ -6,7 +6,6 @@
 
 <!-- TOC -->
 
-- [Repo Title REPLACE](#repo-title-replace)
 - [Description](#description)
 - [Bandwidth](#bandwidth)
 - [Environmental Variables](#environmental-variables)
