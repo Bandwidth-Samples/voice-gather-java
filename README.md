@@ -1,4 +1,4 @@
-# Repo Title REPLACE
+# Voice Gather Java
 <a href="http://dev.bandwidth.com"><img src="https://s3.amazonaws.com/bwdemos/BW-VMP.png"/></a>
 </div>
 
