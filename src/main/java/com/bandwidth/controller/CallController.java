@@ -1,22 +1,37 @@
 package com.bandwidth.controller;
 
-import com.bandwidth.BandwidthClient;
-import com.bandwidth.Environment;
-import com.bandwidth.Model.CreateCall;
-import com.bandwidth.Model.VoiceReply;
-import com.bandwidth.exceptions.ApiException;
-import com.bandwidth.http.response.ApiResponse;
-import com.bandwidth.voice.controllers.APIController;
-import com.bandwidth.voice.models.CreateCallResponse;
-import com.bandwidth.voice.models.CreateCallRequest;
+import com.bandwidth.Main;
+import com.bandwidth.model.CallRequest;
+import com.bandwidth.model.VoiceReply;
+
+import com.bandwidth.sdk.ApiClient;
+import com.bandwidth.sdk.ApiResponse;
+import com.bandwidth.sdk.ApiException;
+import com.bandwidth.sdk.auth.HttpBasicAuth;
+import com.bandwidth.sdk.Configuration;
+import com.bandwidth.sdk.model.*;
+import com.bandwidth.sdk.api.CallsApi;
+import com.bandwidth.sdk.model.CreateCall;
+import com.bandwidth.sdk.model.CreateCallResponse;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.io.IOException;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 
 @RestController
 @RequestMapping("calls")
@@ -28,28 +43,28 @@ public class CallController {
     private final String password = System.getenv("BW_PASSWORD");
     private final String accountId = System.getenv("BW_ACCOUNT_ID");
     private final String applicationId = System.getenv("BW_VOICE_APPLICATION_ID");
+    private final String answerUrl = System.getenv("BW_BASE_URL");
 
-    private final BandwidthClient client = new BandwidthClient.Builder()
-            .voiceBasicAuthCredentials(username, password)
-            .environment(Environment.PRODUCTION)
-            .build();
+    public ApiClient defaultClient = Configuration.getDefaultApiClient();
+    public HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
+    public final CallsApi api = new CallsApi(defaultClient);
+    private static CreateCall createCallBody = new CreateCall();
 
-    private final APIController controller = client.getVoiceClient().getAPIController();
 
     @PostMapping()
-    public VoiceReply createCall(@RequestBody CreateCall createCall) throws IOException {
+    public VoiceReply createCall(@RequestBody CallRequest callRequest) throws ApiException, URISyntaxException {
 
-        // Build the body of the call request to the Bandwidth API
-        CreateCallRequest callRequest = new CreateCallRequest.Builder()
-                .answerUrl("http://32e2578009f7.ngrok.io/callbacks/voiceCallback")
-                .applicationId(applicationId)
-                .to(createCall.getTo())
-                .from(createCall.getFrom())
-                .build();
+        Basic.setUsername(username);
+        Basic.setPassword(password);
+        createCallBody.setTo(callRequest.getTo());
+        createCallBody.setFrom(callRequest.getFrom());
+        createCallBody.setApplicationId(applicationId);
+        createCallBody.setAnswerUrl(new URI(answerUrl + "/callbacks/voiceCallback"));
+
 
         VoiceReply voiceReply = new VoiceReply();
         try {
-            ApiResponse<CreateCallResponse> response = controller.createCall(accountId, callRequest);
+            ApiResponse<CreateCallResponse> response = api.createCallWithHttpInfo(accountId, createCallBody);
             voiceReply.setSuccess(true);
         } catch (ApiException e) { // Bandwidth API response status not 2XX
             voiceReply.setSuccess(false);
