@@ -23,7 +23,7 @@ public class CallbacksController {
 
     Logger logger = LoggerFactory.getLogger(CallbacksController.class);
 
-    @RequestMapping("/voiceCallback")
+    @RequestMapping("/outbound/voice")
     public String voiceCallback(@RequestBody AnswerCallback callback) throws JAXBException {
 
         Response response = new Response();
@@ -38,7 +38,7 @@ public class CallbacksController {
 		SpeakSentence speakSentence = new SpeakSentence("Please hit the number 1, 2, or 3 followed by pound when finished");
                 Gather gather = new Gather().builder()
                         .repeatCount(3)
-                        .gatherUrl("/callbacks/gatherCallback")
+                        .gatherUrl("/callbacks/outbound/gather")
                         .terminatingDigits("#")
 		        .children(List.of(speakSentence))
                         .build();
@@ -71,7 +71,7 @@ public class CallbacksController {
 
     }
 
-    @RequestMapping("/gatherCallback")
+    @RequestMapping("/outbound/gather")
     public String gatherCallback(@RequestBody GatherCallback callback) throws JAXBException {
 
         Response response = new Response();

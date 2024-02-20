@@ -59,7 +59,7 @@ public class CallController {
         createCallBody.setTo(callRequest.getTo());
         createCallBody.setFrom(callRequest.getFrom());
         createCallBody.setApplicationId(applicationId);
-        createCallBody.setAnswerUrl(new URI(answerUrl + "/callbacks/voiceCallback"));
+        createCallBody.setAnswerUrl(new URI(answerUrl + "/callbacks/outbound/voice"));
 
 
         VoiceReply voiceReply = new VoiceReply();
