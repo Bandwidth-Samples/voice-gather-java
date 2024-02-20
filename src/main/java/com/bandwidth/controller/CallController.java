@@ -43,7 +43,7 @@ public class CallController {
     private final String password = System.getenv("BW_PASSWORD");
     private final String accountId = System.getenv("BW_ACCOUNT_ID");
     private final String applicationId = System.getenv("BW_VOICE_APPLICATION_ID");
-    private final String answerUrl = System.getenv("BW_BASE_URL");
+    private final String answerUrl = System.getenv("BASE_CALLBACK_URL");
 
     public ApiClient defaultClient = Configuration.getDefaultApiClient();
     public HttpBasicAuth Basic = (HttpBasicAuth) defaultClient.getAuthentication("Basic");
