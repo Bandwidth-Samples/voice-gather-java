@@ -31,9 +31,7 @@ The sample app uses the below environmental variables.
 BW_ACCOUNT_ID                 # Your Bandwidth Account Id
 BW_USERNAME                   # Your Bandwidth API Token
 BW_PASSWORD                   # Your Bandwidth API Secret
-BW_NUMBER                     # Your The Bandwidth Phone Number
 BW_VOICE_APPLICATION_ID       # Your Voice Application Id created in the dashboard
-BW_MESSAGING_APPLICATION_ID   # Your Messaging Application Id created in the dashboard
 BASE_CALLBACK_URL             # Your public base url
 LOCAL_PORT                    # The port number you wish to run the sample on
 ```
@@ -43,7 +41,7 @@ LOCAL_PORT                    # The port number you wish to run the sample on
 For a detailed introduction to Bandwidth Callbacks see https://dev.bandwidth.com/guides/callbacks/callbacks.html
 
 Below are the callback paths:
-* `/callbacks/voiceCallback`
+* `/callbacks/outbound/voice`
 * `<add other callbacks>`
 
 ## Ngrok

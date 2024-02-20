@@ -1,12 +1,21 @@
 package com.bandwidth.controller;
 
-import com.bandwidth.Model.VoiceCallback;
-import com.bandwidth.voice.bxml.verbs.*;
+import com.bandwidth.sdk.model.bxml.*;
+import com.bandwidth.sdk.model.bxml.Response;
+import com.bandwidth.sdk.model.AnswerCallback;
+import com.bandwidth.sdk.model.GatherCallback;
+
+import java.util.List;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("callbacks")
@@ -14,57 +23,59 @@ public class CallbacksController {
 
     Logger logger = LoggerFactory.getLogger(CallbacksController.class);
 
-    @RequestMapping("/voiceCallback")
-    public String voiceCallback(@RequestBody VoiceCallback callback) {
+    @RequestMapping("/outbound/voice")
+    public String voiceCallback(@RequestBody AnswerCallback callback) throws JAXBException {
 
         Response response = new Response();
+	JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
 
         logger.info(callback.getEventType());
         logger.info(callback.getCallId());
         switch( callback.getEventType()) {
             case "answer":
 
-                Gather gather = Gather.builder()
-                        .audioProducer(
-                                SpeakSentence.builder()
-                                        .text("Text goes here hit pound when finished")
-                                        .build()
-                        )
+
+		SpeakSentence speakSentence = new SpeakSentence("Please hit the number 1, 2, or 3 followed by pound when finished");
+                Gather gather = new Gather().builder()
                         .repeatCount(3)
-                        .gatherUrl("/callbacks/gatherCallback")
+                        .gatherUrl("/callbacks/outbound/gather")
                         .terminatingDigits("#")
+		        .children(List.of(speakSentence))
                         .build();
 
-                response.add(gather);
+                response.with(gather);
 
-                return response.toBXML();
+                return response.toBxml(jaxbContext);
             case "initiate":
                 logger.info("The Initiate event is fired when an inbound call is received for an application. Sent to the URL specified in the application.");
 
-                return response.add(
-                        SpeakSentence.builder().text("Initiate event recieved but not inteded.  Ending call").build()
-                ).toBXML();
+                return response.with(
+                        new SpeakSentence("Initiate event recieved but not inteded.  Ending call")
+		).toBxml(jaxbContext);
+
 
             case "disconnect":
                 logger.info("The Disconnect event is fired when a call ends, for any reason. The cause for a disconnect event on a call can be:");
                 logger.info("Call " + callback.getCallId() + " has disconnected");
 
-                return response.add(
-                        SpeakSentence.builder().text("Disconnect event recieved but not inteded.  Ending call").build()
-                ).toBXML();
+
+                return response.with(
+                        new SpeakSentence("Disconnect event recieved but not inteded.  Ending call")
+                ).toBxml(jaxbContext);
 
             default:
-                return response.add(
-                        SpeakSentence.builder().text( callback.getEventType() + " event recieved but not inteded.  Ending call").build()
-                ).toBXML();
+                return response.with(
+                        new SpeakSentence( callback.getEventType() + " event recieved but not inteded.  Ending call")
+                ).toBxml(jaxbContext);
         }
 
     }
 
-    @RequestMapping("/gatherCallback")
-    public String gatherCallback(@RequestBody VoiceCallback callback) {
+    @RequestMapping("/outbound/gather")
+    public String gatherCallback(@RequestBody GatherCallback callback) throws JAXBException {
 
         Response response = new Response();
+	JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
 
         logger.info(callback.getEventType());
         logger.info(callback.getCallId());
@@ -74,16 +85,16 @@ public class CallbacksController {
 
             SpeakSentence speakSentence;
             if(digit.equalsIgnoreCase("1")) {
-                speakSentence = SpeakSentence.builder().text("You have chosen choice 1").build();
+                speakSentence = new SpeakSentence("You have chosen choice 1");
             } else if(digit.equalsIgnoreCase("2")) {
-                speakSentence = SpeakSentence.builder().text("You have chosen choice 2").build();
+                speakSentence = new SpeakSentence("You have chosen choice 2");
             } else {
-                speakSentence = SpeakSentence.builder().text("Invalid choice").build();
+                speakSentence = new SpeakSentence("Invalid choice");
             }
 
-           response.add(speakSentence);
+           response.with(speakSentence);
         }
-        return response.toBXML();
+        return response.toBxml(jaxbContext);
     }
 
 }
