@@ -50,6 +50,6 @@ public class CallController {
             return ResponseEntity.internalServerError().build();
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
