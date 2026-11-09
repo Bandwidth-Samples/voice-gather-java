@@ -33,13 +33,13 @@ public class CallController {
 
     @PostMapping()
     public ResponseEntity<Void> createCall(@RequestBody CallRequest callRequest) {
-        if (callRequest.getTo() == null) {
+        if (callRequest.to() == null) {
             return ResponseEntity.badRequest().build();
         }
 
         CreateCall createCall = new CreateCall()
                 .applicationId(applicationId)
-                .to(callRequest.getTo())
+                .to(callRequest.to())
                 .from(number)
                 .answerUrl(URI.create(baseCallbackUrl + "/callbacks/outbound/voice"));
 
